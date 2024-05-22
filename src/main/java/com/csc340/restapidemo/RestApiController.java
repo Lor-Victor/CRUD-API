@@ -87,6 +87,16 @@ public class RestApiController {
         return studentDatabase.values();
     }
 
+    @PutMapping("students/update/{id}")
+    public Object updateStudent(@PathVariable int id, @RequestBody Student student){
+        if (studentDatabase.containsKey(id)) {
+            studentDatabase.put(id, student);
+            return studentDatabase.values();
+        } else {
+            return "Error: Not Found.";
+        }
+    }
+
     /**
      * Get a quote from quotable and make it available our own API endpoint
      *
@@ -147,6 +157,29 @@ public class RestApiController {
             Logger.getLogger(RestApiController.class.getName()).log(Level.SEVERE,
                     null, ex);
             return "error in /univ";
+        }
+
+    }
+    /**
+     * Get a random number trivia fact and make it available at our own API
+     *
+     * @return trivia string
+     */
+    @GetMapping("/numbertrivia")
+    public Object getNumberTrivia(){
+       try{
+           String url = "http://numbersapi.com/random/trivia";
+           RestTemplate restTemplate = new RestTemplate();
+
+           String trivia = restTemplate.getForObject(url, String.class);
+
+           System.out.println("Number Trivia: " + trivia);
+
+           return trivia;
+       } catch(Exception ex){
+            Logger.getLogger(RestApiController.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            return "error in /numbertrivia";
         }
 
     }
